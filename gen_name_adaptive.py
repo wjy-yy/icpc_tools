@@ -3,8 +3,8 @@ from PIL import ImageFont, ImageDraw, Image
 import numpy as np
 import pandas
 
-df = pandas.read_excel("official.xlsx")
-conf = 'Contestant'
+df = pandas.read_excel("Volunteer.xlsx")
+conf = 'Volunteer'
 # conf = 'Coach'
 
 for idx, data in df.iterrows():
@@ -14,7 +14,7 @@ for idx, data in df.iterrows():
     # print(data['Team Name'])
     # 设置写入文字名和读取文件名
     file_bk_img = conf+".png"
-    if conf == 'Contestant':
+    if conf == 'Contestant' or data['No'] == 1:
         offset = 0
     else:
         offset = -200
@@ -22,7 +22,7 @@ for idx, data in df.iterrows():
     img_pil = Image.fromarray(bk_img)
     draw = ImageDraw.Draw(img_pil)
     # =======队伍名
-    if conf == 'Contestant':
+    if conf == 'Contestant' or data['No'] == 1:
         add_text = data['Team Name']
     # 设置需要显示的字体
         fontpath = "Arial Bold Italic.ttf"
@@ -58,10 +58,10 @@ for idx, data in df.iterrows():
                 fill=(255, 255, 255), anchor="mm",
                 align="center")
     bk_img = np.array(img_pil)
-    if conf == 'Contestant':
+    if conf == 'Contestant' or conf == 'Volunteer' or conf == 'Technical':
         for i in range(1,4):
-            if type(data['Member '+str(i)+' Name']) == str:
-                add_text = data['Member '+str(i)+' Name']
+            if type(data['Member '+str(i)+' Name']) == str or i==1:
+                add_text = data['Member '+str(i)+' Name'] if type(data['Member '+str(i)+' Name']) == str else ''
                 if len(add_text) > 15:
                     font = ImageFont.truetype(fontpath, 215-3*len(add_text))
                 else:
@@ -95,6 +95,6 @@ for idx, data in df.iterrows():
                 fill=(255, 255, 255), anchor="mm",
                 align="center")
         _img = np.array(img_pil)
-        cv2.imwrite(conf+'/'+str(idx)+".png", _img)
+        cv2.imwrite(conf+'/-'+str(idx)+".png", _img)
     # exit(0)
 
